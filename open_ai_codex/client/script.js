@@ -43,7 +43,7 @@ function chatStripe(isAi, value, uniqueId) {
   return `
     <div class="wrapper ${isAi && "ai"}">
       <div class="chat">
-        <div className="profile">
+        <div class="profile">
           <img 
             src="${isAi ? bot : user}"
             alt="${isAi ? "bot" : "user"}"
@@ -79,6 +79,31 @@ const handleSubmit = async (e) => {
 
   // use the loader to now populate the element that we just retrieved
   loader(messageDiv);
+
+  // fetch data from server -> bot's response
+  const response = await fetch("http://localhost:5000", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt: data.get("prompt") }),
+  });
+
+  clearInterval(loadInterval);
+  messageDiv.innerHTML = "";
+
+  if (response.ok) {
+    const data = await response.json();
+    const parsedData = data.bot.trim();
+
+    console.log(parsedData);
+
+    typeText(messageDiv, parsedData);
+  } else {
+    const err = await response.text();
+
+    messageDiv.innerHTML = "Something went wrong";
+
+    alert(err);
+  }
 };
 
 form.addEventListener("submit", handleSubmit);
