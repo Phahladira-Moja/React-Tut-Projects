@@ -3,6 +3,7 @@ import Tilt from "react-tilt";
 import { motion } from "framer-motion";
 
 import { styles } from "../styles";
+import { SectionWrapper } from "../hoc";
 import { services } from "../constants";
 import { fadeIn, textVariant } from "../utils/motion";
 
@@ -60,4 +61,5 @@ const About = () => {
   );
 };
 
-export default About;
+// NB: You can wrap the export with a wrapper
+export default SectionWrapper(About, "about");
